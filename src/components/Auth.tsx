@@ -121,91 +121,132 @@ const Auth:React.FC = () => {
             {isLogin ? "Login" : "Register"}
           </Typography>
           <form className={classes.form} noValidate>
+
+          {!isLogin && <>
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
               autoFocus
-              value={email}
+              value={username}
               onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{
-                setEmail(e.target.value);
+                setUsername(e.target.value);
               }}
             />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setPassword(e.target.value);
-              }}
-            />
+            <Box textAlign="center">
+              <IconButton>
+                <label>
+                  <AccountCircleIcon
+                    fontSize="large"
+                    className={
+                      avatarImage
+                      ? styles.login_addIconLoaded
+                      : styles.login_addIcon
+                    }
+                  />
+                  <input
+                    className={styles.login_hiddenIcon}
+                    type="file"
+                    onChange={onChangeImageHandler}
+                  />
+                </label>
+              </IconButton>
+            </Box>
+          </>}
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={email}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{
+              setEmail(e.target.value);
+            }}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setPassword(e.target.value);
+            }}
+          />
 
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              startIcon={<EmailIcon />}
-              onClick={
-                isLogin
-                  ? async () => {
-                      try {
-                        await signInEmail();
-                      } catch (err:any) {
-                        alert(err.message);
-                      }
+          <Button
+            disabled={
+              isLogin
+              ? !email || password.length < 6
+              : !username || !email || password.length < 6 || !avatarImage
+            }
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            startIcon={<EmailIcon />}
+            onClick={
+              isLogin
+                ? async () => {
+                    try {
+                      await signInEmail();
+                    } catch (err:any) {
+                      alert(err.message);
                     }
-                  : async () => {
-                      try {
-                        await signUpEmail();
-                      } catch (err:any) {
-                        alert(err.message);
-                      }
+                  }
+                : async () => {
+                    try {
+                      await signUpEmail();
+                    } catch (err:any) {
+                      alert(err.message);
                     }
-              }
-            >
-              {isLogin ? "Login" : "Register"}
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <span
-                  className={styles.login_reset}
-                >
-                  Forgot password?
-                </span>
-              </Grid>
-              <Grid item >
-                <span
-                  className={styles.login_toggleMode}
-                  onClick={() => setIsLogin(!isLogin)}
-                >
-                  {isLogin ? "Create new account ?" : "Back to login"}
-                </span>
-              </Grid>
+                  }
+            }
+          >
+            {isLogin ? "Login" : "Register"}
+          </Button>
+          <Grid container>
+            <Grid item xs>
+              <span
+                className={styles.login_reset}
+              >
+                Forgot password?
+              </span>
             </Grid>
+            <Grid item >
+              <span
+                className={styles.login_toggleMode}
+                onClick={() => setIsLogin(!isLogin)}
+              >
+                {isLogin ? "Create new account ?" : "Back to login"}
+              </span>
+            </Grid>
+          </Grid>
 
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={signInGoogle}
-            >
-              SignIn with Google
-            </Button>
-
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={signInGoogle}
+          >
+            SignIn with Google
+          </Button>
           </form>
         </div>
       </Grid>
